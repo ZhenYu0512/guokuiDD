@@ -1,7 +1,7 @@
 App({
   globalData: {
     // 与用户端小程序共用同一后端
-    baseUrl: 'https://guokui.api.yunyuhui.cn',
+    baseUrl: 'https://localhost:5000',
     token: '',
     username: ''
   },
