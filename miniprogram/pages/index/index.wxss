@@ -1,0 +1,14 @@
+.store-name { font-size: 34rpx; font-weight: bold; margin-bottom: 10rpx; }
+.store-line { color: #666; font-size: 24rpx; line-height: 1.8; }
+.notice { margin-top: 12rpx; color: #b5341f; font-size: 24rpx; background: #fdeceb; padding: 10rpx 16rpx; border-radius: 8rpx; }
+.banner { margin: 20rpx; height: 300rpx; border-radius: 16rpx; overflow: hidden; }
+.banner-img { width: 100%; height: 100%; }
+.section-title { font-size: 32rpx; font-weight: bold; margin: 30rpx 20rpx 10rpx; }
+.featured { white-space: nowrap; padding: 10rpx 20rpx; }
+.featured-item { display: inline-block; width: 220rpx; margin-right: 20rpx; background: #fff; border-radius: 16rpx; overflow: hidden; vertical-align: top; }
+.featured-img { width: 220rpx; height: 220rpx; }
+.featured-name { font-size: 26rpx; padding: 12rpx 16rpx 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.featured-bottom { padding: 8rpx 16rpx 16rpx; display: flex; justify-content: space-between; align-items: center; }
+.soldout { font-size: 20rpx; color: #999; }
+.order-btn { margin: 40rpx 20rpx 20rpx; }
+.icp-footer { text-align: center; color: #bbb; font-size: 20rpx; line-height: 1.8; padding-bottom: 30rpx; white-space: pre-line; }

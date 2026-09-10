@@ -1,0 +1,38 @@
+<view class="page">
+  <view class="add-bar">
+    <text class="muted">共 {{products.length}} 个商品</text>
+    <view class="add-btn" bindtap="goAdd">+ 新增商品</view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && !products.length}}">暂无商品，点击右上角新增</view>
+
+  <view class="card product" wx:for="{{products}}" wx:key="id">
+    <image src="{{item.imageUrl}}" mode="aspectFill" class="p-img" />
+    <view class="p-info">
+      <view class="p-name">
+        {{item.name}}
+        <text class="tag" wx:if="{{item.isFeatured}}">招牌</text>
+        <text class="tag off" wx:if="{{!item.isActive}}">已下架</text>
+      </view>
+      <view class="muted">{{item.categoryName}} · 库存 {{item.stock}}</view>
+      <view class="price">¥{{item.priceText}}</view>
+    </view>
+    <view class="p-ops">
+      <view class="op stock" data-id="{{item.id}}" data-stock="{{item.stock}}" data-name="{{item.name}}" bindtap="editStock">改库存</view>
+      <switch
+        checked="{{!item.isSoldOut}}"
+        color="#b5341f"
+        data-id="{{item.id}}"
+        data-value="{{!item.isSoldOut ? true : false}}"
+        bindchange="(e) => null"
+        wx:if="{{false}}" />
+      <view
+        class="op {{item.isSoldOut ? 'soldout-on' : 'soldout-off'}}"
+        data-id="{{item.id}}"
+        data-value="{{item.isSoldOut ? false : true}}"
+        bindtap="toggleSoldOut">
+        {{item.isSoldOut ? '恢复售卖' : '设为售罄'}}
+      </view>
+    </view>
+  </view>
+</view>

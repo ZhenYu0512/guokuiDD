@@ -1,0 +1,15 @@
+.tabs { white-space: nowrap; background: #fff; padding: 16rpx 10rpx; position: sticky; top: 0; z-index: 5; }
+.tab { display: inline-block; padding: 12rpx 30rpx; font-size: 26rpx; color: #666; }
+.tab-active { color: #b5341f; font-weight: bold; border-bottom: 4rpx solid #b5341f; }
+.order-head { display: flex; justify-content: space-between; align-items: center; }
+.order-no { font-size: 24rpx; color: #999; }
+.order-status { font-size: 26rpx; font-weight: bold; }
+.s-0 { color: #ff9800; } .s-1 { color: #b5341f; } .s-2 { color: #2196f3; }
+.s-3 { color: #4caf50; } .s-4 { color: #999; }
+.order-summary { margin: 16rpx 0; font-size: 26rpx; }
+.order-foot { display: flex; justify-content: space-between; color: #999; font-size: 22rpx; }
+.pickup { margin-top: 16rpx; background: #fdeceb; border-radius: 10rpx; padding: 14rpx 20rpx; color: #b5341f; font-size: 26rpx; }
+.pickup-code { font-size: 40rpx; font-weight: bold; letter-spacing: 8rpx; margin-left: 16rpx; }
+.order-actions { display: flex; justify-content: flex-end; margin-top: 16rpx; }
+.action-btn { padding: 10rpx 30rpx; border: 1rpx solid #ddd; border-radius: 30rpx; font-size: 24rpx; color: #666; margin-left: 20rpx; }
+.action-btn.primary { background: #b5341f; color: #fff; border-color: #b5341f; }

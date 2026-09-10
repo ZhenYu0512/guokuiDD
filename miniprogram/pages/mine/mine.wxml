@@ -1,0 +1,50 @@
+<view class="page" wx:if="{{me}}">
+  <!-- 用户信息 -->
+  <view class="user-card">
+    <image src="{{me.avatarUrl || '/assets/avatar.png'}}" class="avatar" mode="aspectFill" />
+    <view class="user-name">{{me.nickName}}</view>
+  </view>
+
+  <!-- 会员卡 -->
+  <view class="member-card" wx:if="{{me.memberCard}}">
+    <view class="mc-title">会员卡 Lv.{{me.memberCard.level}}</view>
+    <view class="mc-no">{{me.memberCard.cardNo}}</view>
+  </view>
+  <view class="member-card mc-empty" wx:else bindtap="openCard">
+    <view class="mc-title">暂未开通会员卡</view>
+    <view class="mc-open">点击立即开卡 →</view>
+  </view>
+
+  <!-- 资产 -->
+  <view class="assets card">
+    <view class="asset" bindtap="togglePoints">
+      <view class="asset-num">{{me.points}}</view>
+      <view class="asset-label">积分</view>
+    </view>
+    <view class="asset" bindtap="goCoupons">
+      <view class="asset-num">{{me.couponCount}}</view>
+      <view class="asset-label">优惠券</view>
+    </view>
+  </view>
+
+  <!-- 积分明细 -->
+  <view class="card" wx:if="{{showPoints}}">
+    <view class="card-title">积分明细</view>
+    <view class="empty" wx:if="{{!pointsRecords.length}}">暂无记录</view>
+    <view class="pr-row" wx:for="{{pointsRecords}}" wx:key="id">
+      <view>
+        <view>{{item.reason}}</view>
+        <view class="pr-time">{{item.timeText}}</view>
+      </view>
+      <text class="{{item.change > 0 ? 'pr-plus' : 'pr-minus'}}">{{item.change > 0 ? '+' : ''}}{{item.change}}</text>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="card menu-list">
+    <view class="menu-item" bindtap="goCoupons">优惠券中心 <text class="arrow">›</text></view>
+    <view class="menu-item" bindtap="goAbout">关于我们 <text class="arrow">›</text></view>
+  </view>
+
+  <view class="icp-footer">武汉市云与慧网络科技有限公司 提供技术支持\n鄂ICP备2026013201号-3X</view>
+</view>

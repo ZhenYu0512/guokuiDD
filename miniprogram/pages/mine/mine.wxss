@@ -1,0 +1,24 @@
+.user-card { display: flex; align-items: center; padding: 40rpx 30rpx; background: linear-gradient(135deg, #b5341f, #e06a4a); }
+.avatar { width: 110rpx; height: 110rpx; border-radius: 50%; background: #fff; }
+.user-name { color: #fff; font-size: 34rpx; margin-left: 24rpx; }
+.member-card {
+  margin: 20rpx; padding: 30rpx; border-radius: 16rpx;
+  background: linear-gradient(135deg, #3d3d3d, #1c1c1c); color: #e8c97a;
+}
+.mc-title { font-size: 28rpx; }
+.mc-no { font-size: 36rpx; letter-spacing: 4rpx; margin-top: 20rpx; }
+.mc-open { margin-top: 20rpx; font-size: 26rpx; }
+.assets { display: flex; }
+.asset { flex: 1; text-align: center; }
+.asset-num { font-size: 40rpx; font-weight: bold; color: #b5341f; }
+.asset-label { color: #999; font-size: 24rpx; margin-top: 8rpx; }
+.card-title { font-weight: bold; margin-bottom: 16rpx; }
+.pr-row { display: flex; justify-content: space-between; align-items: center; padding: 16rpx 0; border-bottom: 1rpx solid #f3f3f3; }
+.pr-row:last-child { border-bottom: none; }
+.pr-time { font-size: 22rpx; color: #999; margin-top: 4rpx; }
+.pr-plus { color: #4caf50; font-weight: bold; }
+.pr-minus { color: #b5341f; font-weight: bold; }
+.menu-item { padding: 24rpx 0; display: flex; justify-content: space-between; font-size: 28rpx; border-bottom: 1rpx solid #f3f3f3; }
+.menu-item:last-child { border-bottom: none; }
+.arrow { color: #ccc; font-size: 36rpx; }
+.icp-footer { text-align: center; color: #bbb; font-size: 20rpx; line-height: 1.8; margin: 40rpx 0 20rpx; white-space: pre-line; }

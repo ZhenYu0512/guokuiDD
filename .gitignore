@@ -1,0 +1,36 @@
+# .NET
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.log
+app.err.log
+
+# 本地敏感配置（真实密钥/连接串，切勿提交）
+appsettings.Development.json
+appsettings.*.Local.json
+appsettings.Production.json
+
+# 证书与密钥（切勿提交）
+Certs/
+*.pem
+*.p12
+*.pfx
+
+# Node
+node_modules/
+dist/
+
+# 上传的用户文件
+server/GuokuiDD.Api/wwwroot/uploads/
+
+# IDE / 编辑器
+.vs/
+.idea/
+.vscode/
+.codebuddy/
+
+# 系统
+.DS_Store
+Thumbs.db

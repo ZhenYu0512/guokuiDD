@@ -1,0 +1,30 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/menu/menu",
+    "pages/confirm/confirm",
+    "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/mine/mine",
+    "pages/coupons/coupons",
+    "pages/about/about"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#b5341f",
+    "navigationBarTitleText": "锅盔肉夹馍",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f6f6f6"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#b5341f",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/menu/menu", "text": "点单" },
+      { "pagePath": "pages/orders/orders", "text": "订单" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

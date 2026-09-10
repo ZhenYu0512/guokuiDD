@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="logo-box">
+    <view class="logo">锅盔肉夹馍</view>
+    <view class="slogan">现烤现卖 · 美味即享</view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">关于我们</view>
+    <view class="row">
+      <text class="label">技术支持</text>
+      <text>{{company}}</text>
+    </view>
+    <view class="row">
+      <text class="label">云服务器</text>
+      <text>{{cloud}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">备案信息</view>
+    <view class="row" data-text="{{icpMain}}" bindtap="copyIcp">
+      <text class="label">主体ICP备案</text>
+      <text>{{icpMain}}</text>
+    </view>
+    <view class="row" data-text="{{icpDomain}}" bindtap="copyIcp">
+      <text class="label">域名备案</text>
+      <text>{{icpDomain}}</text>
+    </view>
+    <view class="row" data-text="{{icpMini}}" bindtap="copyIcp">
+      <text class="label">小程序备案</text>
+      <text>{{icpMini}}</text>
+    </view>
+  </view>
+
+  <view class="footer">
+    <view>{{company}} 提供技术支持</view>
+    <view>{{icpMain}} · {{icpMini}}</view>
+  </view>
+</view>

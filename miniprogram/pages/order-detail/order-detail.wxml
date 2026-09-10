@@ -1,0 +1,50 @@
+<view class="page" wx:if="{{order}}">
+  <!-- 状态与取餐码 -->
+  <view class="card status-card">
+    <view class="status-text s-{{order.status}}">{{order.statusText}}</view>
+    <view class="pickup-box" wx:if="{{order.status === 1 || order.status === 2}}">
+      <view>请凭取餐码到店取餐</view>
+      <view class="pickup-code">{{order.pickupCode}}</view>
+    </view>
+    <view class="cancel-reason" wx:if="{{order.status === 4}}">取消原因：{{order.cancelReason || '-'}}</view>
+  </view>
+
+  <!-- 自提信息 -->
+  <view class="card">
+    <view class="card-title">自提信息</view>
+    <view class="row"><text class="label">取餐人</text><text>{{order.contactName}}</text></view>
+    <view class="row"><text class="label">手机号</text><text>{{order.contactPhone}}</text></view>
+    <view class="row" wx:if="{{order.remark}}"><text class="label">备注</text><text>{{order.remark}}</text></view>
+  </view>
+
+  <!-- 商品明细（下单快照） -->
+  <view class="card">
+    <view class="card-title">商品明细</view>
+    <view class="item" wx:for="{{order.items}}" wx:key="productId">
+      <image src="{{item.productImage}}" mode="aspectFill" class="item-img" />
+      <view class="item-info">
+        <view>{{item.productName}}</view>
+        <view class="item-spec">{{item.specText}}{{item.addonText ? ' + ' + item.addonText : ''}}</view>
+      </view>
+      <view class="item-right">
+        <view>x{{item.quantity}}</view>
+        <view class="price">¥{{item.subtotalText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 金额 -->
+  <view class="card">
+    <view class="row"><text class="label">商品金额</text><text>¥{{order.totalText}}</text></view>
+    <view class="row"><text class="label">优惠券</text><text>-¥{{order.couponText}}</text></view>
+    <view class="row"><text class="label">积分抵扣（{{order.pointsUsed}} 分）</text><text>-¥{{order.pointsText}}</text></view>
+    <view class="row total"><text class="label">实付</text><text class="price">¥{{order.payText}}</text></view>
+    <view class="row"><text class="label">订单号</text><text class="muted">{{order.orderNo}}</text></view>
+    <view class="row"><text class="label">下单时间</text><text class="muted">{{order.timeText}}</text></view>
+  </view>
+
+  <view class="actions" wx:if="{{order.status === 0}}">
+    <button class="btn-plain" bindtap="cancel">取消订单</button>
+    <button class="btn-primary" bindtap="pay">立即支付</button>
+  </view>
+</view>

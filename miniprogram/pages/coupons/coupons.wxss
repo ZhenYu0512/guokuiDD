@@ -1,0 +1,14 @@
+.section-title { font-weight: bold; margin: 24rpx 20rpx 0; }
+.coupon { display: flex; align-items: center; }
+.coupon-disabled { opacity: 0.5; }
+.c-left { width: 180rpx; text-align: center; border-right: 2rpx dashed #eee; padding-right: 20rpx; }
+.c-amount { color: #b5341f; font-size: 28rpx; }
+.c-num { font-size: 52rpx; font-weight: bold; }
+.c-threshold { font-size: 20rpx; color: #999; }
+.c-mid { flex: 1; padding-left: 24rpx; }
+.c-name { font-size: 28rpx; font-weight: bold; }
+.c-valid { font-size: 22rpx; color: #999; margin-top: 10rpx; }
+.c-btn { background: #b5341f; color: #fff; font-size: 24rpx; padding: 12rpx 32rpx; border-radius: 30rpx; }
+.c-tabs { display: flex; background: #fff; margin: 16rpx 20rpx; border-radius: 12rpx; overflow: hidden; }
+.c-tab { flex: 1; text-align: center; padding: 20rpx 0; font-size: 26rpx; color: #666; }
+.c-tab-active { color: #b5341f; font-weight: bold; background: #fdeceb; }

@@ -1,0 +1,21 @@
+.status-card { text-align: center; padding: 40rpx 24rpx; }
+.status-text { font-size: 36rpx; font-weight: bold; }
+.s-0 { color: #ff9800; } .s-1 { color: #b5341f; } .s-2 { color: #2196f3; }
+.s-3 { color: #4caf50; } .s-4 { color: #999; }
+.pickup-box { margin-top: 24rpx; color: #666; font-size: 26rpx; }
+.pickup-code { font-size: 72rpx; font-weight: bold; color: #b5341f; letter-spacing: 16rpx; margin-top: 10rpx; }
+.cancel-reason { margin-top: 16rpx; color: #999; font-size: 24rpx; }
+.card-title { font-weight: bold; margin-bottom: 16rpx; }
+.row { display: flex; justify-content: space-between; padding: 10rpx 0; font-size: 26rpx; }
+.label { color: #666; }
+.muted { color: #999; }
+.row.total { font-weight: bold; font-size: 30rpx; }
+.item { display: flex; align-items: center; padding: 16rpx 0; border-bottom: 1rpx solid #f3f3f3; }
+.item:last-child { border-bottom: none; }
+.item-img { width: 96rpx; height: 96rpx; border-radius: 10rpx; }
+.item-info { flex: 1; margin-left: 16rpx; }
+.item-spec { font-size: 22rpx; color: #999; margin-top: 6rpx; }
+.item-right { text-align: right; }
+.actions { display: flex; margin: 30rpx 20rpx; gap: 20rpx; }
+.actions button { flex: 1; }
+.btn-plain { background: #fff; color: #666; border: 1rpx solid #ddd; border-radius: 44rpx; }

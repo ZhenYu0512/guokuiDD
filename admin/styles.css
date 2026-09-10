@@ -1,0 +1,57 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f6f8; }
+.login-wrap { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #b5341f, #e06a4a); }
+.login-card { width: 380px; }
+.login-title { text-align: center; margin: 0 0 24px; color: #b5341f; }
+.login-btn { width: 100%; }
+.layout { height: 100vh; }
+.el-aside { background: #2b2b2b; display: flex; flex-direction: column; }
+.logo { color: #fff; font-size: 18px; font-weight: bold; text-align: center; padding: 20px 0; border-bottom: 1px solid #3a3a3a; }
+.el-menu { border-right: none; flex: 1; }
+.logout { color: #999; text-align: center; padding: 16px; cursor: pointer; border-top: 1px solid #3a3a3a; }
+.logout:hover { color: #fff; }
+.about-box { color: #666; text-align: center; padding: 12px; cursor: pointer; border-top: 1px solid #3a3a3a; font-size: 13px; }
+.about-box:hover { color: #fff; }
+.login-footer { text-align: center; color: #999; font-size: 12px; margin-top: 20px; line-height: 1.8; }
+.login-footer p { margin: 0; }
+.about-title { text-align: center; color: #b5341f; margin: 0 0 20px; }
+.page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.page-head h3 { margin: 0; }
+.stat-num { font-size: 28px; font-weight: bold; color: #b5341f; text-align: center; }
+.stat-num.warn { color: #e6a23c; }
+.stat-label { text-align: center; color: #999; margin-top: 8px; }
+.mt { margin-top: 16px; }
+.mt-sm { margin-top: 8px; }
+.upload-row { display: flex; align-items: center; gap: 12px; }
+.upload-preview { width: 64px; height: 64px; border-radius: 8px; }
+.upload-url { margin-top: 8px; font-size: 12px; word-break: break-all; }
+.mb { margin-bottom: 16px; }
+.ml { margin-left: 10px; }
+.mr { margin-right: 6px; }
+.muted { color: #999; font-size: 12px; }
+.order-detail { padding: 8px 24px; }
+.order-detail p { margin: 6px 0; font-size: 13px; }
+.order-detail-item { color: #555; }
+.pickup { color: #b5341f; letter-spacing: 2px; }
+.upload-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  border: 1px solid #dcdfe6;
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+/* 完整 URL 往往很长，强制换行避免撑破表单 */
+.upload-url {
+  word-break: break-all;
+  line-height: 1.5;
+  margin-top: 6px;
+  max-width: 480px;
+}

@@ -1,0 +1,33 @@
+<view class="page">
+  <!-- 门店信息 -->
+  <view class="store card" wx:if="{{store}}">
+    <view class="store-name">{{store.name}}</view>
+    <view class="store-line">📍 {{store.address}}</view>
+    <view class="store-line">🕘 {{store.businessHours}}　📞 {{store.phone}}</view>
+    <view class="notice" wx:if="{{notice}}">公告：{{notice}}</view>
+  </view>
+
+  <!-- 轮播广告 -->
+  <swiper class="banner" indicator-dots autoplay circular wx:if="{{banners.length}}">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="banner-img" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 招牌推荐 -->
+  <view class="section-title">招牌推荐</view>
+  <scroll-view scroll-x class="featured" enhanced show-scrollbar="{{false}}">
+    <view class="featured-item" wx:for="{{featured}}" wx:key="id" bindtap="goMenu">
+      <image src="{{item.imageUrl}}" mode="aspectFill" class="featured-img" />
+      <view class="featured-name">{{item.name}}</view>
+      <view class="featured-bottom">
+        <text class="price">¥{{item.priceText}}</text>
+        <text class="soldout" wx:if="{{item.isSoldOut}}">已售罄</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <button class="btn-primary order-btn" bindtap="goMenu">立即点单</button>
+
+  <view class="icp-footer">武汉市云与慧网络科技有限公司 提供技术支持 · 火山引擎\n鄂ICP备2026013201号-3X</view>
+</view>

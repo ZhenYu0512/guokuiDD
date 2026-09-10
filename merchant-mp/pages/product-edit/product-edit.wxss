@@ -1,0 +1,14 @@
+.img-row { display: flex; align-items: center; margin-bottom: 20rpx; }
+.img-preview { width: 180rpx; height: 180rpx; border-radius: 12rpx; }
+.img-placeholder {
+  width: 180rpx; height: 180rpx; border-radius: 12rpx; background: #f4f4f4;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; color: #999;
+}
+.plus { font-size: 56rpx; line-height: 1; }
+.tip { font-size: 22rpx; margin-top: 8rpx; }
+.img-note { margin-left: 24rpx; color: #bbb; font-size: 22rpx; line-height: 1.8; white-space: pre-line; }
+.form-row { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid #f3f3f3; }
+.form-row:last-child { border-bottom: none; }
+.label { width: 160rpx; color: #666; font-size: 26rpx; flex-shrink: 0; }
+.form-row input, .picker { flex: 1; font-size: 26rpx; }
+.submit { margin: 30rpx 20rpx; }

@@ -1,0 +1,46 @@
+<view class="page">
+  <view class="topbar">
+    <text>{{username}}，及时处理订单</text>
+    <text class="logout" bindtap="logout">退出</text>
+  </view>
+
+  <!-- 状态 tab -->
+  <scroll-view scroll-x class="tabs" enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{tabs}}" wx:key="index"
+      class="tab {{activeTab === index ? 'tab-active' : ''}}"
+      data-index="{{index}}" bindtap="onTabChange">
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <view class="empty" wx:if="{{!loading && !orders.length}}">暂无{{tabs[activeTab]}}订单</view>
+
+  <view class="card order" wx:for="{{orders}}" wx:key="id">
+    <view class="order-head">
+      <view class="pickup-box" wx:if="{{item.pickupCode}}">
+        <text class="pickup-label">取餐码</text>
+        <text class="pickup-code">{{item.pickupCode}}</text>
+      </view>
+      <text class="muted">{{item.timeText}}</text>
+    </view>
+
+    <view class="item" wx:for="{{item.items}}" wx:for-item="p" wx:key="productName">
+      <text class="item-name">{{p.productName}} x{{p.quantity}}</text>
+      <text class="muted" wx:if="{{p.specText}}">{{p.specText}}</text>
+    </view>
+
+    <view class="order-foot">
+      <text class="muted">{{item.contactName}} {{item.contactPhone}}</text>
+      <text class="price">¥{{item.payText}}</text>
+    </view>
+    <view class="muted remark" wx:if="{{item.remark}}">备注：{{item.remark}}</view>
+
+    <view class="actions">
+      <view class="btn print" wx:if="{{item.status >= 1 && item.status <= 3}}" data-order="{{item}}" catchtap="printOrder">打 印</view>
+      <view class="btn primary" wx:if="{{item.status === 1}}" data-id="{{item.id}}" data-act="ready" data-name="出餐" bindtap="action">出 餐</view>
+      <view class="btn success" wx:if="{{item.status === 2}}" data-id="{{item.id}}" data-act="complete" data-name="完成取餐" bindtap="action">完成取餐</view>
+      <view class="btn danger" wx:if="{{item.status <= 1}}" data-id="{{item.id}}" data-act="cancel" data-name="取消订单" bindtap="action">取 消</view>
+    </view>
+  </view>
+</view>

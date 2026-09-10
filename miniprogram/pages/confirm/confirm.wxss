@@ -1,0 +1,14 @@
+.card-title { font-weight: bold; margin-bottom: 16rpx; }
+.form-row { display: flex; align-items: center; padding: 18rpx 0; border-bottom: 1rpx solid #f3f3f3; }
+.form-row:last-child { border-bottom: none; }
+.form-label { width: 150rpx; color: #666; font-size: 26rpx; flex-shrink: 0; }
+.form-row input, .picker { flex: 1; font-size: 26rpx; }
+.item { display: flex; align-items: center; padding: 16rpx 0; border-bottom: 1rpx solid #f3f3f3; }
+.item:last-child { border-bottom: none; }
+.item-img { width: 96rpx; height: 96rpx; border-radius: 10rpx; }
+.item-info { flex: 1; margin-left: 16rpx; }
+.item-spec { font-size: 22rpx; color: #999; margin-top: 6rpx; }
+.item-right { text-align: right; }
+.amount-row { display: flex; justify-content: space-between; padding: 10rpx 0; color: #666; font-size: 26rpx; }
+.amount-row.total { color: #333; font-weight: bold; font-size: 30rpx; }
+.submit { margin: 30rpx 20rpx; }

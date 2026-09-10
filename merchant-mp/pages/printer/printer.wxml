@@ -1,0 +1,33 @@
+<view class="page">
+  <!-- 蓝牙打印 -->
+  <view class="card">
+    <view class="card-title">蓝牙打印机</view>
+    <view class="bt-status {{btConnected ? 'on' : ''}}">
+      {{btConnected ? '已连接：' + btName : '未连接'}}
+    </view>
+    <view class="btn-row">
+      <view class="btn plain" wx:if="{{btConnected}}" bindtap="disconnectBt">断开</view>
+      <view class="btn primary" wx:if="{{btConnected}}" loading="{{printing}}" bindtap="testBtPrint">测试打印</view>
+      <view class="btn primary" wx:else loading="{{scanning}}" bindtap="scan">{{scanning ? '搜索中...' : '搜索蓝牙设备'}}</view>
+    </view>
+    <view class="device" wx:for="{{devices}}" wx:key="deviceId" data-device="{{item}}" bindtap="connectDevice">
+      <text>{{item.name}}</text>
+      <text class="muted">{{item.deviceId}}</text>
+    </view>
+    <view class="muted tip">支持常见 BLE 热敏小票机（58mm）。中文经 Canvas 栅格化打印，无乱码。</view>
+  </view>
+
+  <!-- 云打印 / 网口 / USB -->
+  <view class="card">
+    <view class="card-title">已绑定打印机（云打印 / 网口 / USB）</view>
+    <view class="muted" wx:if="{{!printers.length}}">暂无绑定，请到 PC 管理后台「打印机绑定」添加</view>
+    <view class="printer" wx:for="{{printers}}" wx:key="id">
+      <view class="p-main">
+        <view>{{item.name}} <text class="tag">{{item.connText}}</text></view>
+        <view class="muted">{{item.addrText}}</view>
+      </view>
+      <view class="btn small" data-id="{{item.id}}" bindtap="testCloudPrint">测试打印</view>
+    </view>
+    <view class="muted tip">网口打印机由后端直连下发；云打印经厂商云平台下发；USB 需门店电脑打印助手。</view>
+  </view>
+</view>

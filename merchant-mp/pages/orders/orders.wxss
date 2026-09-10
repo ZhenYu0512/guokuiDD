@@ -1,0 +1,19 @@
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 24rpx; color: #666; font-size: 24rpx; background: #fff; }
+.logout { color: #b5341f; }
+.tabs { white-space: nowrap; background: #fff; padding: 0 10rpx 16rpx; }
+.tab { display: inline-block; padding: 12rpx 28rpx; font-size: 26rpx; color: #666; }
+.tab-active { color: #b5341f; font-weight: bold; border-bottom: 4rpx solid #b5341f; }
+.order-head { display: flex; justify-content: space-between; align-items: center; }
+.pickup-box { display: flex; align-items: baseline; }
+.pickup-label { font-size: 24rpx; color: #999; margin-right: 16rpx; }
+.pickup-code { font-size: 52rpx; font-weight: bold; color: #b5341f; letter-spacing: 8rpx; }
+.item { display: flex; justify-content: space-between; padding: 10rpx 0; border-bottom: 1rpx dashed #f0f0f0; }
+.item-name { font-size: 26rpx; }
+.order-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16rpx; }
+.remark { margin-top: 8rpx; }
+.actions { display: flex; justify-content: flex-end; margin-top: 20rpx; }
+.btn { padding: 14rpx 40rpx; border-radius: 36rpx; font-size: 26rpx; color: #fff; margin-left: 20rpx; }
+.btn.primary { background: #b5341f; }
+.btn.success { background: #4caf50; }
+.btn.danger { background: #fff; color: #b5341f; border: 1rpx solid #b5341f; }
+.btn.print { background: #fff; color: #555; border: 1rpx solid #ddd; }

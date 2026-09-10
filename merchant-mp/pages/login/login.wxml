@@ -1,0 +1,10 @@
+<view class="login-page">
+  <view class="logo">锅盔肉夹馍</view>
+  <view class="sub">商家端</view>
+  <view class="card form">
+    <input class="input" placeholder="商家账号" value="{{username}}" bindinput="onUserInput" />
+    <input class="input" type="password" placeholder="密码" value="{{password}}" bindinput="onPwdInput" />
+    <button class="btn-primary login-btn" loading="{{loading}}" bindtap="login">登 录</button>
+  </view>
+  <view class="footer">武汉市云与慧网络科技有限公司 提供技术支持\n鄂ICP备2026013201号-3X</view>
+</view>

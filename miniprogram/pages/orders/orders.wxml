@@ -1,0 +1,34 @@
+<view class="page">
+  <!-- 状态 tab -->
+  <scroll-view scroll-x class="tabs" enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{tabs}}" wx:key="index"
+      class="tab {{activeTab === index ? 'tab-active' : ''}}"
+      data-index="{{index}}" bindtap="onTabChange">
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <view class="empty" wx:if="{{!loading && !orders.length}}">暂无订单</view>
+
+  <view class="card order" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail">
+    <view class="order-head">
+      <text class="order-no">{{item.orderNo}}</text>
+      <text class="order-status s-{{item.status}}">{{item.statusText}}</text>
+    </view>
+    <view class="order-summary">{{item.summary}}</view>
+    <view class="order-foot">
+      <text class="order-time">{{item.timeText}}</text>
+      <text class="price">¥{{item.payText}}</text>
+    </view>
+    <!-- 取餐码 -->
+    <view class="pickup" wx:if="{{item.status === 1 || item.status === 2}}">
+      取餐码 <text class="pickup-code">{{item.pickupCode}}</text>
+    </view>
+    <!-- 操作按钮 -->
+    <view class="order-actions" wx:if="{{item.status === 0}}">
+      <view class="action-btn" catchtap="cancel" data-id="{{item.id}}">取消订单</view>
+      <view class="action-btn primary" catchtap="pay" data-id="{{item.id}}">去支付</view>
+    </view>
+  </view>
+</view>

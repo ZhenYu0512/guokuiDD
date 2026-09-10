@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/orders/orders",
+    "pages/printer/printer",
+    "pages/products/products",
+    "pages/product-edit/product-edit"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#2b2b2b",
+    "navigationBarTitleText": "锅盔商家端",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f6f6f6"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#b5341f",
+    "list": [
+      { "pagePath": "pages/orders/orders", "text": "订单" },
+      { "pagePath": "pages/printer/printer", "text": "打印" },
+      { "pagePath": "pages/products/products", "text": "商品" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

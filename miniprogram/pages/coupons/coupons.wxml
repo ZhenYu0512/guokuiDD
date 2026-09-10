@@ -1,0 +1,34 @@
+<view class="page">
+  <!-- 可领取 -->
+  <view class="section-title" wx:if="{{claimable.length}}">领券中心</view>
+  <view class="coupon card" wx:for="{{claimable}}" wx:key="id">
+    <view class="c-left">
+      <view class="c-amount">¥<text class="c-num">{{item.discountText}}</text></view>
+      <view class="c-threshold">{{item.thresholdText}}</view>
+    </view>
+    <view class="c-mid">
+      <view class="c-name">{{item.name}}</view>
+      <view class="c-valid">{{item.validText}}</view>
+    </view>
+    <view class="c-btn" data-id="{{item.id}}" bindtap="claim">领取</view>
+  </view>
+
+  <!-- 我的券 -->
+  <view class="section-title">我的优惠券</view>
+  <view class="c-tabs">
+    <view class="c-tab {{tab === 0 ? 'c-tab-active' : ''}}" data-tab="0" bindtap="onTab">未使用</view>
+    <view class="c-tab {{tab === 1 ? 'c-tab-active' : ''}}" data-tab="1" bindtap="onTab">已使用</view>
+    <view class="c-tab {{tab === 2 ? 'c-tab-active' : ''}}" data-tab="2" bindtap="onTab">已过期</view>
+  </view>
+  <view class="empty" wx:if="{{!mine.length}}">暂无优惠券</view>
+  <view class="coupon card {{tab !== 0 ? 'coupon-disabled' : ''}}" wx:for="{{mine}}" wx:key="id">
+    <view class="c-left">
+      <view class="c-amount">¥<text class="c-num">{{item.discountText}}</text></view>
+      <view class="c-threshold">{{item.thresholdText}}</view>
+    </view>
+    <view class="c-mid">
+      <view class="c-name">{{item.name}}</view>
+      <view class="c-valid">{{item.validText}}</view>
+    </view>
+  </view>
+</view>

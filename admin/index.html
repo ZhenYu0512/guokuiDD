@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>锅盔肉夹馍 · 管理后台</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- 注意：本文件为 DOM 内模板，所有组件必须使用显式闭合标签，禁止自闭合 -->
+  <div id="app">
+    <!-- 登录页 -->
+    <div v-if="!token" class="login-wrap">
+      <el-card class="login-card">
+        <h2 class="login-title">锅盔肉夹馍 · 管理后台</h2>
+        <el-form @submit.prevent>
+          <el-form-item><el-input v-model="loginForm.username" placeholder="用户名"></el-input></el-form-item>
+          <el-form-item><el-input v-model="loginForm.password" type="password" placeholder="密码" show-password @keyup.enter="login"></el-input></el-form-item>
+          <el-button type="primary" class="login-btn" :loading="loading" @click="login">登 录</el-button>
+        </el-form>
+        <div class="login-footer">
+          <p>武汉市云与慧网络科技有限公司 提供技术支持 · 火山引擎</p>
+          <p>鄂ICP备2026013201号 · 鄂ICP备2026013201号-1</p>
+        </div>
+      </el-card>
+    </div>
+
+    <!-- 主界面 -->
+    <el-container v-else class="layout">
+      <el-aside width="200px">
+        <div class="logo">锅盔肉夹馍</div>
+        <el-menu :default-active="page" background-color="#2b2b2b" text-color="#bbb" active-text-color="#fff" @select="page = $event">
+          <el-menu-item index="dashboard">数据概览</el-menu-item>
+          <el-menu-item index="catalog">商品管理</el-menu-item>
+          <el-menu-item index="orders">订单管理</el-menu-item>
+          <el-menu-item index="alerts">库存预警</el-menu-item>
+          <el-menu-item index="printers">打印机绑定</el-menu-item>
+          <el-menu-item index="coupons">优惠券</el-menu-item>
+        </el-menu>
+        <div class="about-box" @click="aboutDialog = true">关于我们</div>
+        <div class="logout" @click="logout">退出登录</div>
+      </el-aside>
+
+      <el-main>
+        <!-- 数据概览 -->
+        <div v-if="page === 'dashboard'">
+          <h3>数据概览（今日）</h3>
+          <el-row :gutter="20">
+            <el-col :span="4"><el-card><div class="stat-num">{{ stats.todayOrderCount }}</div><div class="stat-label">今日订单</div></el-card></el-col>
+            <el-col :span="4"><el-card><div class="stat-num">¥{{ fen2yuan(stats.todayPaidAmount) }}</div><div class="stat-label">今日营业额</div></el-card></el-col>
+            <el-col :span="4"><el-card><div class="stat-num warn">{{ stats.pendingCount }}</div><div class="stat-label">待支付</div></el-card></el-col>
+            <el-col :span="4"><el-card><div class="stat-num warn">{{ stats.bakingCount }}</div><div class="stat-label">烤制中</div></el-card></el-col>
+            <el-col :span="4"><el-card><div class="stat-num warn">{{ stats.readyCount }}</div><div class="stat-label">待取餐</div></el-card></el-col>
+          </el-row>
+          <el-button class="mt" @click="loadStats">刷新</el-button>
+        </div>
+
+        <!-- 商品管理 -->
+        <div v-else-if="page === 'catalog'">
+          <div class="page-head">
+            <h3>商品管理</h3>
+            <div>
+              <el-button @click="openCategoryDialog()">新增分类</el-button>
+              <el-button @click="openAddonDialog()">新增加料</el-button>
+              <el-button type="primary" @click="openProductDialog()">新增商品</el-button>
+            </div>
+          </div>
+
+          <el-tabs v-model="catalogTab">
+            <el-tab-pane label="商品" name="products">
+              <el-table :data="catalog.products" border>
+                <el-table-column prop="id" label="ID" width="60"></el-table-column>
+                <el-table-column label="图片" width="80">
+                  <template #default="{ row }">
+                    <el-image :src="row.imageUrl" fit="cover" style="width:48px;height:48px;border-radius:6px" :preview-src-list="[row.imageUrl]" preview-teleported></el-image>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="name" label="名称" width="150"></el-table-column>
+                <el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
+                <el-table-column label="分类" width="100">
+                  <template #default="{ row }">{{ categoryName(row.categoryId) }}</template>
+                </el-table-column>
+                <el-table-column label="规格" width="200">
+                  <template #default="{ row }">
+                    <span class="muted">{{ specSummary(row.id) || '无' }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="价格" width="90">
+                  <template #default="{ row }">¥{{ fen2yuan(row.basePrice) }}</template>
+                </el-table-column>
+                <el-table-column prop="stock" label="库存" width="70"></el-table-column>
+                <el-table-column prop="sort" label="排序" width="70"></el-table-column>
+                <el-table-column label="招牌" width="70">
+                  <template #default="{ row }"><el-tag v-if="row.isFeatured" type="danger" size="small">招牌</el-tag></template>
+                </el-table-column>
+                <el-table-column label="售罄" width="90">
+                  <template #default="{ row }">
+                    <el-switch :model-value="row.isSoldOut" @change="toggleSoldOut(row, $event)"></el-switch>
+                  </template>
+                </el-table-column>
+                <el-table-column label="上架" width="80">
+                  <template #default="{ row }"><el-tag :type="row.isActive ? 'success' : 'info'" size="small">{{ row.isActive ? '上架' : '下架' }}</el-tag></template>
+                </el-table-column>
+                <el-table-column label="操作" width="150" fixed="right">
+                  <template #default="{ row }">
+                    <el-button size="small" @click="openProductDialog(row)">编辑</el-button>
+                    <el-button size="small" type="danger" @click="removeProduct(row)">下架</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+
+            <el-tab-pane label="分类" name="categories">
+              <el-table :data="catalog.categories" border>
+                <el-table-column prop="id" label="ID" width="60"></el-table-column>
+                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="sort" label="排序" width="80"></el-table-column>
+                <el-table-column label="状态" width="90">
+                  <template #default="{ row }"><el-tag :type="row.isActive ? 'success' : 'info'" size="small">{{ row.isActive ? '启用' : '停用' }}</el-tag></template>
+                </el-table-column>
+                <el-table-column label="操作" width="150">
+                  <template #default="{ row }">
+                    <el-button size="small" @click="openCategoryDialog(row)">编辑</el-button>
+                    <el-button size="small" type="danger" @click="removeCategory(row)">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+
+            <el-tab-pane label="加料" name="addons">
+              <el-table :data="catalog.addons" border>
+                <el-table-column prop="id" label="ID" width="60"></el-table-column>
+                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column label="价格" width="100">
+                  <template #default="{ row }">¥{{ fen2yuan(row.price) }}</template>
+                </el-table-column>
+                <el-table-column label="状态" width="90">
+                  <template #default="{ row }"><el-tag :type="row.isActive ? 'success' : 'info'" size="small">{{ row.isActive ? '启用' : '停用' }}</el-tag></template>
+                </el-table-column>
+                <el-table-column label="操作" width="150">
+                  <template #default="{ row }">
+                    <el-button size="small" @click="openAddonDialog(row)">编辑</el-button>
+                    <el-button size="small" type="danger" @click="removeAddon(row)">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+
+            <el-tab-pane label="规格" name="specs">
+              <el-alert type="info" :closable="false" title="规格组（如辣度）挂在商品下，每组选项为单选。" class="mb"></el-alert>
+              <el-table :data="catalog.specGroups" border>
+                <el-table-column prop="id" label="ID" width="60"></el-table-column>
+                <el-table-column label="所属商品" width="160">
+                  <template #default="{ row }">{{ productName(row.productId) }}</template>
+                </el-table-column>
+                <el-table-column prop="name" label="组名" width="80"></el-table-column>
+                <el-table-column label="必选" width="70">
+                  <template #default="{ row }"><el-tag :type="row.isRequired ? 'danger' : 'info'" size="small">{{ row.isRequired ? '必选' : '可选' }}</el-tag></template>
+                </el-table-column>
+                <el-table-column prop="sort" label="排序" width="70"></el-table-column>
+                <el-table-column label="选项">
+                  <template #default="{ row }">
+                    <el-tag v-for="o in specOptionsOf(row.id)" :key="o.id" class="mr" closable @close="removeSpecOption(o)">
+                      {{ o.name }}{{ o.priceDelta ? ' +¥' + fen2yuan(o.priceDelta) : '' }}
+                    </el-tag>
+                    <el-button size="small" @click="addSpecOption(row)">+ 选项</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" width="170">
+                  <template #default="{ row }">
+                    <el-button size="small" @click="openSpecGroupDialog(row.productId)">同商品加组</el-button>
+                    <el-button size="small" type="danger" @click="removeSpecGroup(row)">删除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-button class="mt" @click="openSpecGroupDialog()">为商品新增规格组</el-button>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+
+        <!-- 订单管理 -->
+        <div v-else-if="page === 'orders'">
+          <div class="page-head">
+            <h3>订单管理</h3>
+            <div>
+              <el-date-picker v-model="orderDate" type="date" value-format="YYYYMMDD" placeholder="选择日期" @change="loadOrders"></el-date-picker>
+              <el-button class="ml" @click="loadOrders">刷新</el-button>
+            </div>
+          </div>
+          <el-tabs v-model="orderStatusTab" @tab-change="loadOrders">
+            <el-tab-pane label="全部" name="-1"></el-tab-pane>
+            <el-tab-pane label="待支付" name="0"></el-tab-pane>
+            <el-tab-pane label="烤制中" name="1"></el-tab-pane>
+            <el-tab-pane label="待取餐" name="2"></el-tab-pane>
+            <el-tab-pane label="已完成" name="3"></el-tab-pane>
+            <el-tab-pane label="已取消" name="4"></el-tab-pane>
+          </el-tabs>
+          <el-table :data="orders" border>
+            <el-table-column type="expand">
+              <template #default="{ row }">
+                <div class="order-detail">
+                  <p><b>金额明细：</b>商品总额 ¥{{ fen2yuan(row.totalAmount) }}
+                    ｜优惠券 -¥{{ fen2yuan(row.couponDiscount) }}
+                    ｜积分抵扣 -¥{{ fen2yuan(row.pointsDiscount) }}（{{ row.pointsUsed }} 分）
+                    ｜<b>实付 ¥{{ fen2yuan(row.payAmount) }}</b></p>
+                  <p><b>商品明细：</b></p>
+                  <p v-for="(i, idx) in row.items" :key="idx" class="order-detail-item">
+                    {{ i.productName }}　单价 ¥{{ fen2yuan(i.unitPrice) }} × {{ i.quantity }} = ¥{{ fen2yuan(i.subtotal) }}
+                    <span class="muted">{{ specText(i) }}</span>
+                  </p>
+                  <p><b>下单时间：</b>{{ fmtTime(row.createdAt) }}　<b>支付时间：</b>{{ fmtTime(row.paidAt) || '未支付' }}</p>
+                  <p v-if="row.remark"><b>备注：</b>{{ row.remark }}</p>
+                  <p v-if="row.cancelReason"><b>取消原因：</b>{{ row.cancelReason }}</p>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="orderNo" label="订单号" width="200"></el-table-column>
+            <el-table-column label="取餐码" width="80">
+              <template #default="{ row }"><b class="pickup">{{ row.pickupCode }}</b></template>
+            </el-table-column>
+            <el-table-column label="用户" width="100">
+              <template #default="{ row }">{{ row.userNickName || '-' }}</template>
+            </el-table-column>
+            <el-table-column label="商品">
+              <template #default="{ row }">
+                <div v-for="(i, idx) in row.items" :key="idx">
+                  {{ i.productName }} x{{ i.quantity }}
+                  <span class="muted">{{ specText(i) }}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="实付" width="90">
+              <template #default="{ row }">¥{{ fen2yuan(row.payAmount) }}</template>
+            </el-table-column>
+            <el-table-column label="联系人" width="150">
+              <template #default="{ row }">{{ row.contactName }} {{ row.contactPhone }}</template>
+            </el-table-column>
+            <el-table-column label="下单时间" width="150">
+              <template #default="{ row }">{{ fmtTime(row.createdAt) }}</template>
+            </el-table-column>
+            <el-table-column label="状态" width="90">
+              <template #default="{ row }">
+                <el-tag :type="statusTagType(row.status)" size="small">{{ statusText(row.status) }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="220" fixed="right">
+              <template #default="{ row }">
+                <el-button v-if="row.status === 1" size="small" type="primary" @click="changeStatus(row, 'ready')">出餐</el-button>
+                <el-button v-if="row.status === 2" size="small" type="success" @click="changeStatus(row, 'complete')">完成取餐</el-button>
+                <el-button v-if="row.status <= 1" size="small" type="danger" @click="cancelOrder(row)">取消</el-button>
+                <span v-if="row.status >= 3" class="muted">{{ row.cancelReason || '已完结' }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <!-- 库存预警 -->
+        <div v-else-if="page === 'alerts'">
+          <div class="page-head">
+            <h3>库存预警</h3>
+            <div>
+              阈值 <el-input-number v-model="alertThreshold" :min="1" :max="999" size="small"></el-input-number>
+              <el-button class="ml" @click="loadAlerts">查询</el-button>
+            </div>
+          </div>
+          <el-empty v-if="!alerts.length" description="暂无低库存商品"></el-empty>
+          <el-table v-else :data="alerts" border>
+            <el-table-column prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column prop="name" label="商品"></el-table-column>
+            <el-table-column label="分类" width="140">
+              <template #default="{ row }">{{ categoryName(row.categoryId) }}</template>
+            </el-table-column>
+            <el-table-column label="当前库存" width="120">
+              <template #default="{ row }"><el-tag type="danger">{{ row.stock }}</el-tag></template>
+            </el-table-column>
+            <el-table-column label="操作" width="160">
+              <template #default="{ row }">
+                <el-button size="small" type="primary" @click="restock(row)">补充库存</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <!-- 打印机绑定 -->
+        <div v-else-if="page === 'printers'">
+          <div class="page-head">
+            <h3>小票打印机绑定</h3>
+            <el-button type="primary" @click="openPrinterDialog()">绑定打印机</el-button>
+          </div>
+          <el-table :data="printers" border>
+            <el-table-column prop="id" label="ID" width="60"></el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column label="连接方式" width="110">
+              <template #default="{ row }">
+                <el-tag :type="{ cloud: 'primary', usb: 'warning', lan: 'success' }[row.connType || 'cloud']" size="small">
+                  {{ { cloud: '云打印', usb: '有线USB', lan: '网口' }[row.connType || 'cloud'] }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="终端号(SN)">
+              <template #default="{ row }">{{ (row.connType || 'cloud') === 'cloud' ? row.sn : '-' }}</template>
+            </el-table-column>
+            <el-table-column label="地址">
+              <template #default="{ row }">{{ (row.connType || 'cloud') === 'cloud' ? (row.appKey || '-') : (row.address || '-') }}</template>
+            </el-table-column>
+            <el-table-column label="绑定时间" width="160">
+              <template #default="{ row }">{{ fmtTime(row.createdAt) }}</template>
+            </el-table-column>
+            <el-table-column label="状态" width="90">
+              <template #default="{ row }">
+                <el-tag :type="row.status === 1 ? 'success' : 'info'" size="small">{{ row.status === 1 ? '在线' : '离线' }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="230">
+              <template #default="{ row }">
+                <el-button size="small" type="primary" @click="testPrint(row)">测试打印</el-button>
+                <el-button size="small" @click="openPrinterDialog(row)">编辑</el-button>
+                <el-button size="small" type="danger" @click="removePrinter(row)">解绑</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <!-- 优惠券 -->
+        <div v-else-if="page === 'coupons'">
+          <div class="page-head">
+            <h3>优惠券</h3>
+            <el-button type="primary" @click="couponDialog = true">新增优惠券</el-button>
+          </div>
+          <el-table :data="coupons" border>
+            <el-table-column prop="id" label="ID" width="60"></el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column label="门槛" width="110">
+              <template #default="{ row }">{{ row.thresholdAmount ? '满 ¥' + fen2yuan(row.thresholdAmount) : '无门槛' }}</template>
+            </el-table-column>
+            <el-table-column label="优惠" width="100">
+              <template #default="{ row }">减 ¥{{ fen2yuan(row.discountAmount) }}</template>
+            </el-table-column>
+            <el-table-column label="有效期" width="220">
+              <template #default="{ row }">{{ row.validFrom.substring(0,10) }} ~ {{ row.validTo.substring(0,10) }}</template>
+            </el-table-column>
+            <el-table-column label="已领/总量" width="110">
+              <template #default="{ row }">{{ row.issuedCount }}/{{ row.totalCount }}</template>
+            </el-table-column>
+            <el-table-column label="状态" width="100">
+              <template #default="{ row }">
+                <el-switch :model-value="row.isActive" @change="toggleCoupon(row)"></el-switch>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-main>
+    </el-container>
+
+    <!-- 关于我们弹窗 -->
+    <el-dialog v-model="aboutDialog" title="关于我们" width="440px">
+      <div class="about-dialog">
+        <h3 class="about-title">锅盔肉夹馍 · 管理后台</h3>
+        <el-descriptions :column="1" border>
+          <el-descriptions-item label="技术支持">武汉市云与慧网络科技有限公司</el-descriptions-item>
+          <el-descriptions-item label="云服务器">火山引擎</el-descriptions-item>
+          <el-descriptions-item label="主体ICP备案">鄂ICP备2026013201号</el-descriptions-item>
+          <el-descriptions-item label="域名备案">鄂ICP备2026013201号-1</el-descriptions-item>
+          <el-descriptions-item label="小程序备案">鄂ICP备2026013201号-3X</el-descriptions-item>
+        </el-descriptions>
+      </div>
+    </el-dialog>
+
+    <!-- 分类弹窗 -->
+    <el-dialog v-model="categoryDialog" :title="categoryForm.id ? '编辑分类' : '新增分类'" width="400px">
+      <el-form label-width="70px">
+        <el-form-item label="名称"><el-input v-model="categoryForm.name"></el-input></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="categoryForm.sort" :min="0"></el-input-number></el-form-item>
+        <el-form-item label="启用"><el-switch v-model="categoryForm.isActive"></el-switch></el-form-item>
+      </el-form>
+      <template #footer><el-button type="primary" @click="saveCategory">保存</el-button></template>
+    </el-dialog>
+
+    <!-- 商品弹窗 -->
+    <el-dialog v-model="productDialog" :title="productForm.id ? '编辑商品' : '新增商品'" width="520px">
+      <el-form label-width="90px">
+        <el-form-item label="分类">
+          <el-select v-model="productForm.categoryId">
+            <el-option v-for="c in catalog.categories" :key="c.id" :label="c.name" :value="c.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="名称"><el-input v-model="productForm.name"></el-input></el-form-item>
+        <el-form-item label="商品图片">
+          <div class="upload-row">
+            <el-upload
+              :show-file-list="false"
+              :http-request="uploadProductImage"
+              :before-upload="beforeImageUpload"
+              accept="image/jpeg,image/png,image/gif,image/webp,image/bmp">
+              <el-button type="primary" size="small">选择图片上传</el-button>
+            </el-upload>
+            <el-image
+              v-if="productForm.imageUrl"
+              :src="productForm.imageUrl"
+              fit="cover"
+              class="upload-preview"
+              :preview-src-list="[productForm.imageUrl]"
+              preview-teleported></el-image>
+            <span v-else class="muted">未上传（留空时使用占位图）</span>
+            <el-button
+              v-if="productForm.imageUrl"
+              size="small"
+              type="danger"
+              plain
+              @click="clearProductImage">清除</el-button>
+          </div>
+          <div v-if="productForm.imageUrl" class="upload-url muted">{{ productForm.imageUrl }}</div>
+        </el-form-item>
+        <el-form-item label="描述"><el-input v-model="productForm.description"></el-input></el-form-item>
+        <el-form-item label="价格(元)"><el-input-number v-model="productForm.priceYuan" :min="0" :precision="2"></el-input-number></el-form-item>
+        <el-form-item label="库存"><el-input-number v-model="productForm.stock" :min="0"></el-input-number></el-form-item>
+        <el-form-item label="排序"><el-input-number v-model="productForm.sort" :min="0"></el-input-number></el-form-item>
+        <el-form-item label="招牌"><el-switch v-model="productForm.isFeatured"></el-switch></el-form-item>
+        <el-form-item label="售罄"><el-switch v-model="productForm.isSoldOut"></el-switch></el-form-item>
+        <el-form-item label="上架"><el-switch v-model="productForm.isActive"></el-switch></el-form-item>
+      </el-form>
+      <template #footer><el-button type="primary" @click="saveProduct">保存</el-button></template>
+    </el-dialog>
+
+    <!-- 加料弹窗 -->
+    <el-dialog v-model="addonDialog" :title="addonForm.id ? '编辑加料' : '新增加料'" width="400px">
+      <el-form label-width="80px">
+        <el-form-item label="名称"><el-input v-model="addonForm.name"></el-input></el-form-item>
+        <el-form-item label="价格(元)"><el-input-number v-model="addonForm.priceYuan" :min="0" :precision="2"></el-input-number></el-form-item>
+        <el-form-item label="启用"><el-switch v-model="addonForm.isActive"></el-switch></el-form-item>
+      </el-form>
+      <template #footer><el-button type="primary" @click="saveAddon">保存</el-button></template>
+    </el-dialog>
+
+    <!-- 规格组弹窗 -->
+    <el-dialog v-model="specGroupDialog" title="新增规格组" width="420px">
+      <el-form label-width="90px">
+        <el-form-item label="所属商品">
+          <el-select v-model="specGroupForm.productId" filterable placeholder="选择商品" style="width:100%">
+            <el-option v-for="p in catalog.products" :key="p.id" :label="p.name" :value="p.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="组名"><el-input v-model="specGroupForm.name" placeholder="如：辣度"></el-input></el-form-item>
+        <el-form-item label="必选"><el-switch v-model="specGroupForm.isRequired"></el-switch></el-form-item>
+      </el-form>
+      <template #footer><el-button type="primary" @click="saveSpecGroup">保存</el-button></template>
+    </el-dialog>
+
+    <!-- 打印机弹窗 -->
+    <el-dialog v-model="printerDialog" :title="printerForm.id ? '编辑打印机' : '绑定打印机'" width="440px">
+      <el-form label-width="90px">
+        <el-form-item label="名称"><el-input v-model="printerForm.name" placeholder="如：前台小票机"></el-input></el-form-item>
+        <el-form-item label="连接方式">
+          <el-radio-group v-model="printerForm.connType">
+            <el-radio-button value="cloud">云打印</el-radio-button>
+            <el-radio-button value="usb">有线USB</el-radio-button>
+            <el-radio-button value="lan">网口</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <template v-if="printerForm.connType === 'cloud'">
+          <el-form-item label="终端号SN"><el-input v-model="printerForm.sn"></el-input></el-form-item>
+          <el-form-item label="AppKey"><el-input v-model="printerForm.appKey" placeholder="云打印平台分配（选填）"></el-input></el-form-item>
+        </template>
+        <template v-else-if="printerForm.connType === 'usb'">
+          <el-form-item label="COM口"><el-input v-model="printerForm.address" placeholder="如 COM3"></el-input></el-form-item>
+          <el-alert type="warning" :closable="false" title="USB 打印机需在门店电脑部署本地打印助手，由助手转发打印任务。"></el-alert>
+        </template>
+        <template v-else>
+          <el-form-item label="IP:端口"><el-input v-model="printerForm.address" placeholder="如 192.168.1.100:9100"></el-input></el-form-item>
+          <el-alert type="info" :closable="false" title="网口打印机与服务器需网络互通，绑定后可点「测试打印」验证。"></el-alert>
+        </template>
+        <el-form-item label="在线" class="mt"><el-switch v-model="printerForm.statusBool"></el-switch></el-form-item>
+      </el-form>
+      <template #footer><el-button type="primary" @click="savePrinter">保存</el-button></template>
+    </el-dialog>
+
+    <!-- 优惠券弹窗 -->
+    <el-dialog v-model="couponDialog" title="新增优惠券" width="460px">
+      <el-form label-width="100px">
+        <el-form-item label="名称"><el-input v-model="couponForm.name"></el-input></el-form-item>
+        <el-form-item label="门槛(元)"><el-input-number v-model="couponForm.thresholdYuan" :min="0" :precision="2"></el-input-number></el-form-item>
+        <el-form-item label="优惠(元)"><el-input-number v-model="couponForm.discountYuan" :min="0" :precision="2"></el-input-number></el-form-item>
+        <el-form-item label="有效期">
+          <el-date-picker v-model="couponForm.range" type="daterange" value-format="YYYY-MM-DD"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="发放总量"><el-input-number v-model="couponForm.totalCount" :min="1"></el-input-number></el-form-item>
+      </el-form>
+      <template #footer><el-button type="primary" @click="saveCoupon">保存</el-button></template>
+    </el-dialog>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/element-plus"></script>
+  <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+  <script src="./api.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
