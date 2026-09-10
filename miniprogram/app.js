@@ -1,7 +1,7 @@
 App({
   globalData: {
     // 开发环境使用本地后端；上线前改为 https 域名并配置 request 合法域名
-    baseUrl: 'https://guokui.api.yunyuhui.cn',
+    baseUrl: 'https://localhost:5000',
     storeId: 1,
     token: '',
     userInfo: null
