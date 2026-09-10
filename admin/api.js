@@ -1,5 +1,5 @@
 // 后端地址：开发环境指向本地 API；部署时改为实际域名
-const API_BASE = 'https://guokui.api.yunyuhui.cn';
+const API_BASE = 'https://localhost:5000';
 
 function apiToken() { return localStorage.getItem('admin_token') || ''; }
 
